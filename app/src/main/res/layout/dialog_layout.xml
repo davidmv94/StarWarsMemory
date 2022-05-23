@@ -1,0 +1,81 @@
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_dialog">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/yellow"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:text="Game completed"
+        android:textAppearance="?android:attr/textAppearanceButton"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/yellow"/>
+
+    <LinearLayout
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewDifficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellow"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:layout_margin="4dp"
+            tools:text="Difficulty: 2"
+            android:textAppearance="?android:attr/textAppearanceButton"/>
+
+        <TextView
+            android:id="@+id/textViewMoves"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellow"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            tools:text="Moves: 25"
+            android:textAppearance="?android:attr/textAppearanceButton"/>
+
+        <TextView
+            android:id="@+id/textViewTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellow"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            tools:text="Time left: 24:56"
+            android:textAppearance="?android:attr/textAppearanceButton"/>
+
+
+    </LinearLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/yellow"
+        android:text="back"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/yellow"/>
+
+
+
+
+</LinearLayout>

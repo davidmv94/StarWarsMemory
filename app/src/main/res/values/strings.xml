@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Star Wars Memory</string>
+    <string name="jugar">Jugar</string>
+    <string name="easy_mode">Easy Mode</string>
+    <string name="medium_mode">Medium Mode</string>
+    <string name="hard_mode">Hard Mode</string>
+    <string name="moves">MOVES</string>
+    <string name="timer">TIMER</string>
+    <string name="pairs_left">PAIRS LEFT</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
