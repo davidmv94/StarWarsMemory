@@ -1,6 +1,4 @@
-package com.david.starwarsmemory
-
-import androidx.fragment.app.Fragment
+package com.david.starwarsmemory.usecases
 
 interface OnFragmentActionsListener {
     fun completePair()

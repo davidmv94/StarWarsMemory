@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:background="@drawable/background"
-    tools:context=".GameActivity">
+    tools:context=".usecases.game.GameActivity">
 
     <ImageView
         android:id="@+id/imageViewBack"

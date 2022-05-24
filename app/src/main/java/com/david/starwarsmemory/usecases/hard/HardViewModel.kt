@@ -1,54 +1,41 @@
-package com.david.starwarsmemory
+package com.david.starwarsmemory.usecases.hard
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.media.MediaPlayer
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import com.david.starwarsmemory.databinding.FragmentMediumBinding
+import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.ViewModel
+import com.david.starwarsmemory.usecases.OnFragmentActionsListener
+import com.david.starwarsmemory.R
+import com.david.starwarsmemory.databinding.FragmentHardBinding
 import com.david.starwarsmemory.model.Card
 import com.david.starwarsmemory.util.Constants
-import com.david.starwarsmemory.util.Constants.CARD_DELAY
-import com.david.starwarsmemory.util.Constants.FAIL_DELAY
 
+//Properties
+lateinit var arrayCards : MutableList<Card>
+lateinit var arrayImageViews : Array<ImageView>
+lateinit var myListener : OnFragmentActionsListener
+lateinit var myResources: Resources
+@SuppressLint("StaticFieldLeak")
+lateinit var myContext : Context
 
-class MediumFragment : Fragment() {
+var firstFlip = true
+var firstCardNumber = 0
+var pairsCompleteds = 0
+var timerStarted = false
+const val WIN_PAIRS = Constants.HARD_TOTAL_PAIRS
 
-    private var listener: OnFragmentActionsListener? = null
-    private var _binding: FragmentMediumBinding? = null
-    private val binding get() = _binding!!
+class HardViewModel : ViewModel() {
 
-    private lateinit var arrayCards : MutableList<Card>
-    private lateinit var arrayImageViews : Array<ImageView>
-
-    private var firstFlip = true
-    private var firstCardNumber = 0
-    private var pairsCompleteds = 0
-    private var timerStarted = false
-
-    private val WIN_PAIRS = Constants.MEDIUM_TOTAL_PAIRS
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        _binding = FragmentMediumBinding.inflate(inflater, container, false)
-
-        setArrays()
-        setClickableCards(true)
-
-        return binding.root
-    }
-
-    private fun setArrays() {
-        arrayCards = mutableListOf<Card>(
+    fun setupGame(binding : FragmentHardBinding,
+                  listener : OnFragmentActionsListener,
+                  resources : Resources,
+                  context: Context) {
+        arrayCards = mutableListOf(
             Card(Constants.Images.LUKE.image, false),
             Card(Constants.Images.LEIA.image, false),
             Card(Constants.Images.DARTHVADER.image, false),
@@ -61,6 +48,9 @@ class MediumFragment : Fragment() {
             Card(Constants.Images.ANAKIN.image, false),
             Card(Constants.Images.OBIWAN.image, false),
             Card(Constants.Images.LIGHTSABER.image, false),
+            Card(Constants.Images.STORM3.image, false),
+            Card(Constants.Images.KYLOREN.image, false),
+            Card(Constants.Images.XWING.image, false),
             Card(Constants.Images.LUKE.image, false),
             Card(Constants.Images.LEIA.image, false),
             Card(Constants.Images.DARTHVADER.image, false),
@@ -72,7 +62,10 @@ class MediumFragment : Fragment() {
             Card(Constants.Images.STORM2.image, false),
             Card(Constants.Images.ANAKIN.image, false),
             Card(Constants.Images.OBIWAN.image, false),
-            Card(Constants.Images.LIGHTSABER.image, false)
+            Card(Constants.Images.LIGHTSABER.image, false),
+            Card(Constants.Images.STORM3.image, false),
+            Card(Constants.Images.KYLOREN.image, false),
+            Card(Constants.Images.XWING.image, false)
         )
         arrayImageViews = arrayOf(
             binding.card1,
@@ -98,14 +91,28 @@ class MediumFragment : Fragment() {
             binding.card21,
             binding.card22,
             binding.card23,
-            binding.card24
+            binding.card24,
+            binding.card25,
+            binding.card26,
+            binding.card27,
+            binding.card28,
+            binding.card29,
+            binding.card30
         )
         arrayCards.shuffle()
+
+        myListener = listener
+        myResources = resources
+        myContext = context
     }
 
-    private fun setClickableCards(clickable : Boolean) {
+    fun setClickableCards(clickable : Boolean) {
         if(clickable){
-            arrayImageViews.forEach { it.setOnClickListener { flipCard(it.tag.toString().toInt()-1) }}
+            arrayImageViews.forEach { imageView ->
+                imageView.setOnClickListener {
+                    flipCard(it.tag.toString().toInt()-1)
+                }
+            }
         }else{
             arrayImageViews.forEach { it.setOnClickListener {  } } }
     }
@@ -114,11 +121,10 @@ class MediumFragment : Fragment() {
 
         //FIRST CARD
         if (!arrayCards[cardNumber].isFlipped && firstFlip) {
-            clickSound()
 
             if(!timerStarted){
                 timerStarted = true
-                listener?.startCountdown()
+                myListener.startCountdown()
             }
 
             showCard(cardNumber)
@@ -128,7 +134,6 @@ class MediumFragment : Fragment() {
         }
         //SECOND CARD
         else if (!arrayCards[cardNumber].isFlipped && !firstFlip){
-            clickSound()
 
             showCard(cardNumber)
             firstFlip = true
@@ -142,24 +147,19 @@ class MediumFragment : Fragment() {
         }
     }
 
-    private fun clickSound() {
-        val mp = MediaPlayer.create(requireContext(),R.raw.click_sound)
-        mp.start()
-    }
-
     private fun pairCompleted() {
         pairsCompleteds++
-        listener?.completePair()
+        myListener.completePair()
 
         if(pairsCompleteds == WIN_PAIRS){
-            listener?.createWinDialog()
+            myListener.createWinDialog()
         }
 
         setCardDelay()
     }
 
     private fun incrementMoves(){
-        listener?.incrementMoves()
+        myListener.incrementMoves()
     }
 
     private fun setCardDelay(){
@@ -168,15 +168,15 @@ class MediumFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed(
             {
                 setClickableCards(true)
-            },CARD_DELAY)
+            }, Constants.CARD_DELAY
+        )
     }
 
     private fun showCard(cardNumber : Int){
         val card = arrayImageViews[cardNumber]
         val image = arrayCards[cardNumber].image
-
         card.setImageResource(image)
-        card.background = resources.getDrawable(R.drawable.card_front)
+        card.background = ResourcesCompat.getDrawable(myResources,R.drawable.card_front, null)
         arrayCards[cardNumber].isFlipped = true
     }
 
@@ -186,29 +186,18 @@ class MediumFragment : Fragment() {
         setClickableCards(false)
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                card.background = resources.getDrawable(R.drawable.card_back)
+                card.background = ResourcesCompat.getDrawable(myResources,R.drawable.card_back, null)
                 card.setImageResource(R.drawable.starwars_logo)
                 arrayCards[cardNumber].isFlipped = false
 
-                arrayImageViews[firstCardNumber].background = resources.getDrawable(R.drawable.card_back)
+                arrayImageViews[firstCardNumber].background = ResourcesCompat.getDrawable(myResources,R.drawable.card_back, null)
                 arrayImageViews[firstCardNumber].setImageResource(R.drawable.starwars_logo)
                 arrayCards[firstCardNumber].isFlipped = false
 
                 setClickableCards(true)
 
-            }, FAIL_DELAY)
+            }, Constants.FAIL_DELAY
+        )
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        if (context is OnFragmentActionsListener) {
-            listener = context
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
 }
