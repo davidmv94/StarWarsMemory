@@ -172,4 +172,11 @@ class EasyViewModel : ViewModel() {
         )
     }
 
+    fun restart(){
+        firstFlip = true
+        firstCardNumber = 0
+        pairsCompleteds = 0
+        timerStarted = false
+    }
+
 }

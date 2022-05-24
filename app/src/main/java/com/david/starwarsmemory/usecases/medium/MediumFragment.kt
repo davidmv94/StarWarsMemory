@@ -52,6 +52,7 @@ class MediumFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
+        viewModel.restart()
         listener = null
     }
 }

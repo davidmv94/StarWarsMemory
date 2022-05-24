@@ -52,6 +52,7 @@ class HardFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
+        viewModel.restart()
         listener = null
     }
 }
